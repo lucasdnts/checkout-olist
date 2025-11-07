@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: olist_db
+    restart: unless-stopped
+    ports:
+      - "5432:5432"  #Lembrar de ajustar para empacotar tudo.
+    environment:
+      POSTGRES_DB: olist_test
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - ./docker/db_data:/var/lib/postgresql/data
+    networks:
+      - olist_network
+
+networks:
+  olist_network:
+    driver: bridge
