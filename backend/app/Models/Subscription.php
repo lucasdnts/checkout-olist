@@ -18,6 +18,7 @@ class Subscription extends Model
         'plan_price_in_cents',
         'user_email',
         'status',
+        'idempotency_key',
     ];
 
 

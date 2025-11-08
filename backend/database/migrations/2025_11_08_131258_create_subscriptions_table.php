@@ -11,6 +11,7 @@ return new class extends Migration {
             $table->integer('plan_price_in_cents'); 
             $table->string('user_email')->index();
             $table->enum('status', ['pending', 'active', 'failed'])->default('pending');
+            $table->uuid('idempotency_key')->unique();
             $table->timestamps();
         });
     }

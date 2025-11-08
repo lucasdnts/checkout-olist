@@ -10,14 +10,17 @@ use App\Models\Subscription;
 use App\Services\CouponService;
 use App\Exceptions\InvalidCouponException;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Http;  
+use App\Services\GatewayService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 
 class CheckoutController extends Controller
 {
-    public function __construct(protected CouponService $couponService)
-    {
+    // Injeta ambos os serviços
+    public function __construct(
+        protected CouponService $couponService,
+        protected GatewayService $gatewayService
+    ) {
     }
 
     public function processCheckout(Request $request)
@@ -57,21 +60,13 @@ class CheckoutController extends Controller
                 }
             
                 $this->couponService->validateCoupon($cupom, $plano);
-
                 $valores = $this->couponService->calculateDiscount($plano, $cupom);
             }
 
-            // processar como um proprio gateway
-            $responseGateway = Http::post(url('/api/gateway/process'), [
-                'card_number' => $dados['card_number'],
-                'amount_in_cents' => $valores['total'],
-            ]);
-            
-            $gatewayData = $responseGateway->json();
-            
-            if ($responseGateway->failed()) {
-                throw new \Exception($gatewayData['mensagem'] ?? 'Falha no pagamento');
-            }
+            $gatewayData = $this->gatewayService->processPayment(
+                $dados['card_number'],
+                $valores['total']
+            );
 
             $assinaturaFinal = DB::transaction(function () use ($plano, $cupom, $valores, $dados, $gatewayData) {
 
@@ -111,7 +106,16 @@ class CheckoutController extends Controller
             return response()->json(['mensagem' => $e->getMessage()], 422);
 
         } catch (\Exception $e) {
-            Log::error('Erro no Checkout: ' . $e->getMessage());
+            Log::error(
+                'Falha no processamento do checkout',
+                [
+                    'plan_id' => $dados['plan_id'] ?? null,
+                    'user_email' => $dados['email'] ?? null,
+                    'coupon_code' => $dados['coupon_code'] ?? null,
+                    'idempotency_key' => $dados['idempotency_key'],
+                    'exception_message' => $e->getMessage(),
+                ]
+            );
             return response()->json(['mensagem' => $e->getMessage()], 400);
         }
     }

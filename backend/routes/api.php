@@ -27,9 +27,6 @@ Route::get('/plans', [PlanController::class, 'index']);
 Route::post('/coupons/validate', [CouponController::class, 'validateCoupon']);
 Route::post('/checkout', [CheckoutController::class, 'processCheckout']);
 
-#Gateway
-Route::post('/gateway/process', [GatewayMockController::class, 'processPayment']);
-
 #Subscriptions
 Route::get('/subscriptions/{id}', [CheckoutController::class, 'returnSubscription']);
 
