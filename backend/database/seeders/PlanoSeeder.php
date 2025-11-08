@@ -3,7 +3,6 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 use App\Models\Plano;
 
 class PlanoSeeder extends Seeder
@@ -14,8 +13,6 @@ class PlanoSeeder extends Seeder
     public function run(): void
     {
        
-        DB::table('planos')->delete();
-
         $planos = [
             [
                 'name' => 'BASIC Mensal',
@@ -43,6 +40,11 @@ class PlanoSeeder extends Seeder
             ],
         ];
 
-        DB::table('planos')->insert($planos);
+        foreach ($planos as $plano) {
+            Plano::updateOrCreate(
+                ['slug' => $plano['slug']],
+                $plano
+            );
+        }
     }
 }
