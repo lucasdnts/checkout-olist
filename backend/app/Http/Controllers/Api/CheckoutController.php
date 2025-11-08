@@ -20,7 +20,7 @@ class CheckoutController extends Controller
     {
     }
 
-    public function processarCheckout(Request $request)
+    public function processCheckout(Request $request)
     {
         // dados de entrada
         $dados = $request->validate([
@@ -37,7 +37,7 @@ class CheckoutController extends Controller
         // evitar duplicidade
         $subscription = Subscription::where('idempotency_key', $dados['idempotency_key'])->first();
         if ($subscription) {
-            return $this->retornarAssinatura($subscription->id); //retorna o resultado anterior
+            return $this->returnSubscription($subscription->id); //retorna o resultado anterior
         }
 
         try {
@@ -105,7 +105,7 @@ class CheckoutController extends Controller
                 return $assinatura;
             });
 
-            return $this->retornarAssinatura($assinaturaFinal->id);
+            return $this->returnSubscription($assinaturaFinal->id);
 
         } catch (InvalidCouponException | ValidationException $e) {
             return response()->json(['mensagem' => $e->getMessage()], 422);
@@ -119,7 +119,7 @@ class CheckoutController extends Controller
     /**
      * recuperar detalhes assinatura
      */
-    public function retornarAssinatura($id)
+    public function returnSubscription($id)
     {
         $assinatura = Subscription::with(['plan', 'transactions', 'couponUsage.coupon'])
             ->find($id);
