@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\PlanoController;
-use App\Http\Controllers\Api\CupomController;
+use App\Http\Controllers\Api\PlanController;
+use App\Http\Controllers\Api\CouponController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -20,6 +20,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 #Checkout
-Route::get('/planos', [PlanoController::class, 'index']);
-Route::post('/cupons/validar', [CupomController::class, 'validar']);
+Route::get('/plans', [PlanController::class, 'index']);
+Route::post('/coupons/validate', [CouponController::class, 'validateCoupon']);
 
