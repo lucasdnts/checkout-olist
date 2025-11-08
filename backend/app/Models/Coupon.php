@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Cupom extends Model
+class Coupon extends Model
 {
     use HasFactory;
 
-    protected $table = 'cupons';
+    protected $table = 'coupons';
 
     protected $fillable = [
         'code',
@@ -19,7 +19,6 @@ class Cupom extends Model
         'discount_value',
         'valid_until',
         'usage_limit',
-        'current_usage',
         'compatible_periodicity',
         'plan_id',
     ];
@@ -28,11 +27,11 @@ class Cupom extends Model
         'discount_value' => 'integer',
         'valid_until' => 'datetime',
         'usage_limit' => 'integer',
-        'current_usage' => 'integer',
     ];
 
-    public function plano(): BelongsTo
+    //Relations
+    public function plan(): BelongsTo
     {
-        return $this->belongsTo(Plano::class, 'plan_id');
+        return $this->belongsTo(Plan::class, 'plan_id');
     }
 }

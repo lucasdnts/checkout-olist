@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Plano;
+use App\Models\Plan;
 
 class PlanoSeeder extends Seeder
 {
@@ -41,7 +41,7 @@ class PlanoSeeder extends Seeder
         ];
 
         foreach ($planos as $plano) {
-            Plano::updateOrCreate(
+            Plan::updateOrCreate(
                 ['slug' => $plano['slug']],
                 $plano
             );

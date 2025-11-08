@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Plano;
-use App\Models\Cupom;
+use App\Models\Plan;
+use App\Models\Coupon;
 
 class CupomSeeder extends Seeder
 {
@@ -14,7 +14,7 @@ class CupomSeeder extends Seeder
     public function run(): void
     {
 
-        $proMonthly = Plano::where('slug', 'PRO_MONTHLY')->first();
+        $proMonthly = Plan::where('slug', 'PRO_MONTHLY')->first();
 
         $cupons = [
             // 10% em qualquer periodicidade, sem limite, sem expiração
@@ -25,7 +25,6 @@ class CupomSeeder extends Seeder
                 'discount_value' => 10,
                 'valid_until' => null,
                 'usage_limit' => null,
-                'current_usage' => 0,
                 'compatible_periodicity' => null,
                 'plan_id' => null,
             ],
@@ -38,7 +37,6 @@ class CupomSeeder extends Seeder
                 'discount_value' => 3000,
                 'valid_until' => now()->addDays(5),
                 'usage_limit' => 2,
-                'current_usage' => 0,
                 'compatible_periodicity' => 'monthly',
                 'plan_id' => $proMonthly ? $proMonthly->id : null,
             ],
@@ -51,7 +49,6 @@ class CupomSeeder extends Seeder
                 'discount_value' => 20, 
                 'valid_until' => now()->addDays(30),
                 'usage_limit' => 5,
-                'current_usage' => 0,
                 'compatible_periodicity' => 'yearly',
                 'plan_id' => null,
             ],
@@ -64,14 +61,13 @@ class CupomSeeder extends Seeder
                 'discount_value' => 500, 
                 'valid_until' => now()->subDay(),
                 'usage_limit' => null,
-                'current_usage' => 0,
                 'compatible_periodicity' => null,
                 'plan_id' => null,
             ],
         ];
 
         foreach ($cupons as $cupon) {
-            Cupom::updateOrCreate( 
+            Coupon::updateOrCreate( 
                 ['code' => $cupon['code']],
                 $cupon
             );
