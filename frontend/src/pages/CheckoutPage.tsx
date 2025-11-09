@@ -36,14 +36,10 @@ const FormSchema = z.object({
     .min(3, { message: "Nome no cartão é obrigatório." }),
   
   card_number: z.string()
-    .min(16, { message: "Deve ter 16 dígitos." })
-    .max(16, { message: "Deve ter 16 dígitos." }),
-    
+    .length(16, { message: "O cartão deve ter 16 dígitos." }),
+
   card_expiry: z.string()
-    .min(5, { message: "Use MM/AA" })
-    .regex(/^(0[1-9]|1[0-2])\/?([0-9]{2})$/, {
-      message: "Data inválida. Use MM/AA",
-    }),
+    .length(4, { message: "Data deve ter 4 dígitos." }),
     
   card_cvc: z.string()
     .min(3, { message: "CVC deve ter 3 ou 4 dígitos." })
@@ -51,6 +47,19 @@ const FormSchema = z.object({
     
   coupon_code: z.string().optional(),
 });
+
+const formatCardNumber = (value: string) => {
+  const digits = value.replace(/\D/g, '').slice(0, 16);
+  const parts = digits.match(/.{1,4}/g); // 4 em 4
+  return parts ? parts.join(' ') : digits;
+};
+const formatExpiry = (value: string) => {
+  const digits = value.replace(/\D/g, '').slice(0, 4);
+  if (digits.length > 2) {
+    return `${digits.slice(0, 2)}/${digits.slice(2)}`;
+  }
+  return digits;
+};
 
 
 type OrderSummary = {
@@ -100,12 +109,12 @@ export default function CheckoutPage() {
       if (res.valid && res.values) {
         setSummary(res.values);
         setCouponCode(code);
-        toast.success("Sucesso!", {
+        toast.success("Cupom adicionado!", {
           description: res.message,
         });
       } else {
 
-        toast.warning("Atenção", {
+        toast.warning("Falha ao adicionar cupom.", {
           description: res.message,
         });
       }
@@ -207,7 +216,14 @@ export default function CheckoutPage() {
                     <FormItem>
                       <FormLabel>Número do Cartão</FormLabel>
                       <FormControl>
-                        <Input placeholder="0000 0000 0000 0000" {...field} />
+                        <Input
+                          placeholder="0000 0000 0000 0000"
+                          value={formatCardNumber(field.value || "")}
+                          onChange={(e) => {
+                            const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 16);
+                            field.onChange(digitsOnly);
+                          }}
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -222,7 +238,14 @@ export default function CheckoutPage() {
                       <FormItem className="flex-1">
                         <FormLabel>Validade</FormLabel>
                         <FormControl>
-                          <Input placeholder="MM/AA" {...field} />
+                          <Input
+                            placeholder="MM/AA"
+                            value={formatExpiry(field.value || "")}
+                            onChange={(e) => {
+                              const digitsOnly = e.target.value.replace(/\D/g, '').slice(0, 4);
+                              field.onChange(digitsOnly);
+                            }}
+                          />
                         </FormControl>
                         <FormMessage />
                       </FormItem>

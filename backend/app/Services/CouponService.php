@@ -41,7 +41,13 @@ class CouponService
 
         // compatível com a Periodicidade?
         if ($coupon->compatible_periodicity !== null && $coupon->compatible_periodicity != $plan->periodicity) {
-            throw new InvalidCouponException('Este cupom é válido apenas para planos ' . $coupon->compatible_periodicity . '.');
+            $periodicity = match ($coupon->compatible_periodicity) {
+            'yearly' => 'anuais',
+            'monthly' => 'mensais',
+            default => strtolower($coupon->compatible_periodicity),
+        };
+
+            throw new InvalidCouponException('Este cupom é válido apenas para planos ' . $periodicity . '.');
         }
     }
 

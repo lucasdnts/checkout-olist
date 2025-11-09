@@ -42,14 +42,16 @@ export default function ConfirmationPage() {
       </div>
     );
   }
-  
+
   const transaction = subscription.transactions?.[0];
 
   return (
     <div className="container max-w-2xl mx-auto p-4 py-12">
       <Card className="shadow-lg">
         <CardHeader className="items-center text-center">
-          <CheckCircle className="h-16 w-16 text-green-600 mb-4" />
+          <div className="flex justify-center">
+            <CheckCircle className="h-16 w-16 text-green-600 mb-4" />
+          </div>
           <CardTitle className="text-3xl">Pagamento Aprovado!</CardTitle>
           <CardDescription className="text-lg">
             Sua assinatura do {subscription.plan.name} está ativa.
@@ -58,7 +60,7 @@ export default function ConfirmationPage() {
         <CardContent className="space-y-4">
           <Separator />
           <h3 className="font-semibold">Resumo da Compra</h3>
-          
+
           <div className="flex justify-between">
             <span className="text-muted-foreground">E-mail</span>
             <span className="font-medium">{subscription.user_email}</span>
@@ -70,8 +72,8 @@ export default function ConfirmationPage() {
           <div className="flex justify-between">
             <span className="text-muted-foreground">Valor Cobrado</span>
             <span className="font-medium">
-              {transaction 
-                ? formatPrice(transaction.amount_paid_in_cents) 
+              {transaction
+                ? formatPrice(transaction.amount_paid_in_cents)
                 : 'N/A'}
             </span>
           </div>

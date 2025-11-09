@@ -16,7 +16,7 @@ class GatewayService
 
         // negar cartões que começam com 4
         if (Str::startsWith($cardNumber, '4')) {
-            throw new \Exception('Pagamento negado.');
+            throw new \Exception('Pagamento negado, contate seu banco.');
         }
 
         // randomizar: 70% aprova / 30% nega
@@ -25,7 +25,7 @@ class GatewayService
             if ($chance <= 70) {
                 return $this->gatewayResponse(true, 'Pagamento aprovado.');
             } else {
-                throw new \Exception('Pagamento negado..');
+                throw new \Exception('Pagamento negado, contate seu banco.');
             }
         }
 
@@ -41,7 +41,7 @@ class GatewayService
         return [
             'status' => $sucesso ? 'sucesso' : 'falha',
             'mensagem' => $mensagem,
-            'gateway_transaction_id' => $sucesso ? 'sim_' . Str::uuid() : null,
+            'gateway_transaction_id' => $sucesso ? 'sandbox_' . Str::uuid() : null,
         ];
     }
 }
