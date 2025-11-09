@@ -13,4 +13,13 @@ class PlanController extends Controller
         $plans = Plan::all(); //por enquanto retorna tudo
         return response()->json($plans); 
     }
+
+    public function show($id)
+    {
+    $plan = Plan::find($id);
+        if (!$plan) {
+            return response()->json(['message' => 'Plano não encontrado'], 404);
+        }
+            return response()->json($plan);
+    }
 }

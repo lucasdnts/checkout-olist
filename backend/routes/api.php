@@ -24,6 +24,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 #Checkout
 Route::get('/plans', [PlanController::class, 'index']);
+Route::get('/plans/{id}', [PlanController::class, 'show']);
 Route::post('/coupons/validate', [CouponController::class, 'validateCoupon']);
 Route::post('/checkout', [CheckoutController::class, 'processCheckout']);
 
