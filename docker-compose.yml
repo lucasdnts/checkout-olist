@@ -1,12 +1,23 @@
-version: '3.8'
 
 services:
+  backend:
+    build:
+      context: ./backend 
+      dockerfile: Dockerfile
+    container_name: olist_backend_app
+    working_dir: /var/www
+    volumes:
+      - ./backend:/var/www
+    networks:
+      - olist_network
+    depends_on:
+      - db
+
   db:
     image: postgres:15-alpine
     container_name: olist_db
     restart: unless-stopped
-    ports:
-      - "5432:5432"  #Lembrar de ajustar para empacotar tudo.
+    ports: []
     environment:
       POSTGRES_DB: olist_test
       POSTGRES_USER: postgres
@@ -15,6 +26,33 @@ services:
       - ./docker/db_data:/var/lib/postgresql/data
     networks:
       - olist_network
+
+  nginx_backend:
+    image: nginx:alpine
+    container_name: olist_backend_nginx
+    restart: unless-stopped
+    ports:
+      - "8000:80" 
+    volumes:
+      - ./backend:/var/www
+      - ./docker/backend:/etc/nginx/conf.d
+    networks:
+      - olist_network
+    depends_on:
+      - backend
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: olist_frontend_app
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    networks:
+      - olist_network
+    depends_on:
+      - nginx_backend
 
 networks:
   olist_network:

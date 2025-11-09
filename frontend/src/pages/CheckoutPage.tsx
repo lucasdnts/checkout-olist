@@ -4,7 +4,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
-import { usePlanDetails } from "@/controllers/PlanDetails.controller";
+import { usePlanDetails } from "@/controllers/planDetails.controller";
 import { validateCoupon, submitCheckout } from "@/lib/api";
 import type { CouponValidationResponse } from "@/lib/types";
 import { Button } from "@/components/ui/button";
