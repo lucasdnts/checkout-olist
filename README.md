@@ -39,7 +39,7 @@ cd checkout-olist
 
 ### 2\. Configurar o Backend
 
-O Laravel precisa de um arquivo `.env` e uma chave de aplicação para rodar.
+Gerar arquivo `.env`.
 
 **a. Copie o arquivo de ambiente:**
 
@@ -48,7 +48,11 @@ cp backend/.env.example backend/.env
 ```
 
 **b. Gere a chave da aplicação (via Docker):**
-*(Rode este comando via docker ou na pasta backend: php artisan key:generate)*
+*(Rode este comando via docker ou na pasta backend: `composer install`, `php artisan key:generate`)*
+
+```bash
+docker-compose run --rm backend composer install
+```
 
 ```bash
 docker-compose run --rm backend php artisan key:generate
