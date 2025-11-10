@@ -1,0 +1,121 @@
+{
+	"info": {
+		"_postman_id": "ebaaffde-d24f-4b00-ba43-be213d4d7c83",
+		"name": "API de Checkout - Teste Técnico Olist",
+		"description": "Esta coleção documenta a API RESTful criada para o desafio de Desenvolvedor(a) Full Stack (Pricing & Billing) da Olist.\n\nA API simula o fluxo completo de checkout, desde a seleção de um plano até a aplicação de um cupom de desconto e o processamento de um pagamento (através de um gateway simulado).\n\n### URL Base\n\nA URL base depende de como o projeto está a ser executado.\n\n- **Via Docker:** `http://localhost:5173/api`\n    \n- **Via** **`php artisan serve`**: `http://localhost:8000/api`\n    \n\n### Autenticação\n\nPara os fins deste teste, **não é necessária autenticação** para aceder aos _endpoints_.\n\n### Fluxo de Uso Recomendado\n\n1. `GET /plans`: Obter a lista de planos disponíveis.\n    \n2. `POST /coupons/validate`: Validar um código de cupom para um `plan_id` e obter um _preview_ dos valores (subtotal, desconto, total).\n    \n3. `POST /checkout`: Submeter todos os dados (e-mail, dados do cartão, `plan_id`, cupom opcional) para finalizar a compra.\n    \n4. `GET /subscriptions/{id}`: Recuperar os detalhes da assinatura recém-criada para exibir na página de confirmação.\n    \n\n### Pontos Técnicos\n\n- **Gateway Simulado:** O _endpoint_ `/checkout` não chama uma API externa real. Ele chama um `GatewayService` interno que simula as regras de pagamento exigidas (cartões iniciados por 5, 4 ou 3).\n    \n- **Idempotência:** O _endpoint_ `POST /checkout` é idempotente. Ele requer um `idempotency_key` único no _body_ da requisição. Enviar a mesma chave múltiplas vezes não criará cobranças duplicadas; o sistema apenas retornará o resultado da primeira transação bem-sucedida.",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12832571"
+	},
+	"item": [
+		{
+			"name": "Get plans",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:5173/api/plans",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5173",
+					"path": [
+						"api",
+						"plans"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "Post coupons validate",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Successful POST request\", function () {",
+							"    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\": \"cliente.aprovado@email.com\",\n    \"plan_id\": 2,\n    \"coupon_code\": \"OFF10\",\n    \"card_number\": \"5555444433332222\",\n    \"card_holder\": \"LUCAS APROVADO\",\n    \"card_expiry\": \"12/26\",\n    \"card_cvc\": \"123\",\n    \"idempotency_key\": \"3b1a839c-eaa4-4f4a-a4c1-84f87d1509ce\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:5173/api/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "5173",
+					"path": [
+						"api",
+						"checkout"
+					]
+				},
+				"description": "This is a POST request, submitting data to an API via the request body. This request submits JSON data, and the data is reflected in the response.\n\nA successful POST request typically returns a `200 OK` or `201 Created` response code."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "id",
+			"value": "1"
+		}
+	]
+}

@@ -41,7 +41,7 @@ export async function submitCheckout(payload: any): Promise<Subscription> {
 
   if (!res.ok) {
     const errorData = await res.json();
-    throw new Error(errorData.mensagem || 'Falha no checkout');
+    throw new Error(errorData.message || 'Falha no checkout');
   }
 
   return res.json();

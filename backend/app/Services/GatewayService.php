@@ -40,7 +40,7 @@ class GatewayService
     {
         return [
             'status' => $sucesso ? 'sucesso' : 'falha',
-            'mensagem' => $mensagem,
+            'message' => $mensagem,
             'gateway_transaction_id' => $sucesso ? 'sandbox_' . Str::uuid() : null,
         ];
     }

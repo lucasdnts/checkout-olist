@@ -103,7 +103,7 @@ class CheckoutController extends Controller
             return $this->returnSubscription($assinaturaFinal->id);
 
         } catch (InvalidCouponException | ValidationException $e) {
-            return response()->json(['mensagem' => $e->getMessage()], 422);
+            return response()->json(['message' => $e->getMessage()], 422);
 
         } catch (\Exception $e) {
             Log::error(
@@ -116,7 +116,7 @@ class CheckoutController extends Controller
                     'exception_message' => $e->getMessage(),
                 ]
             );
-            return response()->json(['mensagem' => $e->getMessage()], 400);
+            return response()->json(['message' => $e->getMessage()], 400);
         }
     }
 
@@ -129,7 +129,7 @@ class CheckoutController extends Controller
             ->find($id);
 
         if (!$assinatura) {
-            return response()->json(['mensagem' => 'Assinatura não encontrada.'], 404);
+            return response()->json(['message' => 'Assinatura não encontrada.'], 404);
         }
 
         return response()->json($assinatura);
