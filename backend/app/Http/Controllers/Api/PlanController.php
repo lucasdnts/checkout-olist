@@ -10,7 +10,7 @@ class PlanController extends Controller
 {
     public function index(): JsonResponse
     {
-        $plans = Plan::all(); //por enquanto retorna tudo
+        $plans = Plan::all();
         return response()->json($plans); 
     }
 

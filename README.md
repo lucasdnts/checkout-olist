@@ -105,6 +105,9 @@ O principal *trade-off* do projeto foi priorizar a velocidade de entrega. As fer
   * **Shadcn/ui**
     O Shadcn permitiu a construção de uma UI complexa (formulários, validação em tempo real, toasts) de forma rápida e previsível. Em vez de gastar tempo escrevendo do zero, o foco foi direcionado para a lógica de estado, gerenciamento de dados e a integração com a API.
 
+  * **Entidade `coupon_usages`**
+    Para manter a lógica de negócio dos cupons mais robusta, em vez de utilizar um incremento, optei por criar uma nova entidade para gerenciar a quantidade e o histórico de uso dos cupons.
+
   * **O Trade-off do `GatewayService`**
     O teste exige um "endpoint local mockado". A primeira tentativa foi criar um endpoint `/api/gateway` real e chamá-lo via HTTP. Só que isso causou falhas por conta da natureza single-threaded do `php artisan serve`.
 

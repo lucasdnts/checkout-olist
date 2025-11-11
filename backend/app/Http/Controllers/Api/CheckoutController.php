@@ -16,7 +16,6 @@ use Illuminate\Validation\ValidationException;
 
 class CheckoutController extends Controller
 {
-    // Injeta ambos os serviços
     public function __construct(
         protected CouponService $couponService,
         protected GatewayService $gatewayService
@@ -25,7 +24,6 @@ class CheckoutController extends Controller
 
     public function processCheckout(Request $request)
     {
-        // dados de entrada
         $dados = $request->validate([
             'email' => 'required|email',
             'plan_id' => 'required|integer|exists:plans,id',
@@ -37,10 +35,9 @@ class CheckoutController extends Controller
             'idempotency_key' => 'required|string|uuid',
         ]);
 
-        // evitar duplicidade
         $subscription = Subscription::where('idempotency_key', $dados['idempotency_key'])->first();
         if ($subscription) {
-            return $this->returnSubscription($subscription->id); //retorna o resultado anterior
+            return $this->returnSubscription($subscription->id);
         }
 
         try {
@@ -52,7 +49,6 @@ class CheckoutController extends Controller
                 'total' => $plano->price_in_cents,
             ];
 
-            // revalida cupom
             if ($dados['coupon_code']) {
                 $cupom = Coupon::where('code', $dados['coupon_code'])->first();
                 if (!$cupom) {
@@ -70,17 +66,15 @@ class CheckoutController extends Controller
 
             $assinaturaFinal = DB::transaction(function () use ($plano, $cupom, $valores, $dados, $gatewayData) {
 
-                // assinatura
                 $assinatura = Subscription::create([
                     'plan_id' => $plano->id,
-                    'plan_price_in_cents' => $plano->price_in_cents, // Congela o preco
+                    'plan_price_in_cents' => $plano->price_in_cents,
                     'user_email' => $dados['email'],
                     'status' => 'active',
                     'idempotency_key' => $dados['idempotency_key'],
                 ]);
 
                 $cupomUso = null;
-                // registra cupom se uso
                 if ($cupom) {
                     $cupomUso = $assinatura->couponUsage()->create([
                         'coupon_id' => $cupom->id,
@@ -89,7 +83,6 @@ class CheckoutController extends Controller
                     ]);
                 }
 
-                // transaçao
                 $assinatura->transactions()->create([
                     'coupon_usage_id' => $cupomUso ? $cupomUso->id : null,
                     'gateway_status' => $gatewayData['status'],
@@ -120,9 +113,6 @@ class CheckoutController extends Controller
         }
     }
 
-    /**
-     * recuperar detalhes assinatura
-     */
     public function returnSubscription($id)
     {
         $assinatura = Subscription::with(['plan', 'transactions', 'couponUsage.coupon'])

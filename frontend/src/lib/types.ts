@@ -1,4 +1,4 @@
-// Tipos para a resposta do /plans
+
 export interface Plan {
   id: number;
   name: string;
@@ -7,7 +7,6 @@ export interface Plan {
   periodicity: 'monthly' | 'yearly';
 }
 
-// Tipo para a resposta do /coupons/validate
 export interface CouponValidationResponse {
   valid: boolean;
   message: string;
@@ -18,7 +17,6 @@ export interface CouponValidationResponse {
   };
 }
 
-// Tipos para a resposta do /checkout
 export interface Transaction {
   id: number;
   subscription_id: number;

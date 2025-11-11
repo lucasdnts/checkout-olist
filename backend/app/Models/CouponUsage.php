@@ -19,8 +19,7 @@ class CouponUsage extends Model
         'user_email',
         'discount_amount_in_cents',
     ];
-
-    //Relations
+    
     public function coupon(): BelongsTo
     {
         return $this->belongsTo(Coupon::class);

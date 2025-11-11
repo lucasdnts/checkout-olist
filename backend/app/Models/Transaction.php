@@ -20,8 +20,7 @@ class Transaction extends Model
         'gateway_transaction_id',
     ];
 
-    
-     // Relations
+ 
 
     public function subscription(): BelongsTo
     {

@@ -50,7 +50,7 @@ const FormSchema = z.object({
 
 const formatCardNumber = (value: string) => {
   const digits = value.replace(/\D/g, '').slice(0, 16);
-  const parts = digits.match(/.{1,4}/g); // 4 em 4
+  const parts = digits.match(/.{1,4}/g);
   return parts ? parts.join(' ') : digits;
 };
 const formatExpiry = (value: string) => {
@@ -87,7 +87,7 @@ export default function CheckoutPage() {
       card_number: "",
       card_expiry: "",
       card_cvc: "",
-      coupon_code: "", // Garantir que não seja 'undefined'
+      coupon_code: "",
     },
   });
 
@@ -175,7 +175,6 @@ export default function CheckoutPage() {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             
-            {/* Coluna Formulário de Pagamento */}
             <Card>
               <CardHeader>
                 <CardTitle>Pagamento</CardTitle>
@@ -268,13 +267,11 @@ export default function CheckoutPage() {
               </CardContent>
             </Card>
 
-            {/* Coluna Resumo do Pedido */}
             <Card className="flex flex-col">
               <CardHeader>
                 <CardTitle>Resumo do Pedido</CardTitle>
               </CardHeader>
               <CardContent className="flex-grow space-y-4">
-                {/* Plano Selecionado */}
                 <div className="flex justify-between items-center">
                   <span className="text-muted-foreground">{plan.name}</span>
                   <span className="font-semibold">{formatPrice(plan.price_in_cents)}</span>
@@ -282,7 +279,6 @@ export default function CheckoutPage() {
 
                 <Separator />
                 
-                {/* Cupom */}
                 <FormField
                   control={form.control}
                   name="coupon_code"
@@ -309,7 +305,6 @@ export default function CheckoutPage() {
 
                 <Separator />
 
-                {/* Resumo de Valores */}
                 <div className="space-y-2">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">Subtotal</span>

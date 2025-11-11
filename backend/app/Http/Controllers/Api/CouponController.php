@@ -16,9 +16,6 @@ class CouponController extends Controller
     {
     }
 
-    /**
-     * Valida um cupom e retorna o preview do checkout.
-     */
     public function validateCoupon(Request $request)
     {
         $dados = $request->validate([
@@ -33,8 +30,6 @@ class CouponController extends Controller
             if (!$coupon) {
                 throw new InvalidCouponException('Cupom não encontrado.');
             }
-
-            // Delega para o service
             $this->couponService->validateCoupon($coupon, $plan);
             $valores = $this->couponService->calculateDiscount($plan, $coupon);
 

@@ -14,8 +14,6 @@ export const fetcher = async (url: string) => {
 };
 
 
-
- // valida um cupom
 export async function validateCoupon(code: string, plan_id: number): Promise<CouponValidationResponse> {
   const res = await fetch(`${API_BASE_URL}/coupons/validate`, {
     method: 'POST',
@@ -28,7 +26,6 @@ export async function validateCoupon(code: string, plan_id: number): Promise<Cou
   return res.json();
 }
 
- //formulário de checkout
 export async function submitCheckout(payload: any): Promise<Subscription> {
   const res = await fetch(`${API_BASE_URL}/checkout`, {
     method: 'POST',
